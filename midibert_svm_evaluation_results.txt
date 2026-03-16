@@ -1,0 +1,25 @@
+=====================================================
+    MidiBERT (768D) SVM Model Performance Report     
+=====================================================
+
+Model: Support Vector Machine (RBF Kernel, C=5.0)
+Input: Adversarial-MidiBERT Embeddings (768 dimensions)
+Classes: Franz Schubert, Johannes Brahms, Robert Schumann
+
+--- 5-Fold Cross-Validation (Balanced Accuracy) ---
+Individual Fold Scores: [0.4316272  0.49859944 0.45123504 0.48699495 0.4859944 ]
+Mean Score: 0.4709
+Standard Deviation: 0.0252
+
+--- Detailed Classification Report ---
+                 precision    recall  f1-score   support
+
+ Franz Schubert       0.37      0.42      0.39        84
+Johannes Brahms       0.60      0.50      0.55       109
+Robert Schumann       0.44      0.49      0.47        71
+
+       accuracy                           0.47       264
+      macro avg       0.47      0.47      0.47       264
+   weighted avg       0.49      0.47      0.48       264
+
+Overall Balanced Accuracy (Aggregated): 0.4714

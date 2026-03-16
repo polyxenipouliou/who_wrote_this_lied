@@ -1,0 +1,347 @@
+{
+    "metadata": {
+        "project": "Composer Classification",
+        "model": "SVM (RBF, C=5.0)",
+        "feature_selection_method": "Random Forest Importance",
+        "total_samples": 264
+    },
+    "composer_classes": [
+        "Franz Schubert",
+        "Johannes Brahms",
+        "Robert Schumann"
+    ],
+    "feature_ranking_full": [
+        {
+            "rank": 1,
+            "feature": "pt_std",
+            "importance": 0.12443186401771067
+        },
+        {
+            "rank": 2,
+            "feature": "mc_std",
+            "importance": 0.1204744737981035
+        },
+        {
+            "rank": 3,
+            "feature": "pt_mean",
+            "importance": 0.09770339377171942
+        },
+        {
+            "rank": 4,
+            "feature": "pt_entropy",
+            "importance": 0.08582325146125336
+        },
+        {
+            "rank": 5,
+            "feature": "mc_mean",
+            "importance": 0.07806533694170018
+        },
+        {
+            "rank": 6,
+            "feature": "tt_std",
+            "importance": 0.07767628987961386
+        },
+        {
+            "rank": 7,
+            "feature": "hc_std",
+            "importance": 0.07459655407329491
+        },
+        {
+            "rank": 8,
+            "feature": "hc_mean",
+            "importance": 0.07279826717580108
+        },
+        {
+            "rank": 9,
+            "feature": "tt_entropy",
+            "importance": 0.0711068836213503
+        },
+        {
+            "rank": 10,
+            "feature": "hc_entropy",
+            "importance": 0.06767809858999821
+        },
+        {
+            "rank": 11,
+            "feature": "tt_mean",
+            "importance": 0.06750428424576077
+        },
+        {
+            "rank": 12,
+            "feature": "mc_entropy",
+            "importance": 0.06214130242369386
+        }
+    ],
+    "incremental_steps": [
+        {
+            "num_features": 1,
+            "last_added_feature": "pt_std",
+            "last_feature_importance": 0.12443186401771067,
+            "current_feature_set": [
+                "pt_std"
+            ],
+            "mean_accuracy": 0.46956625074272135,
+            "std_dev": 0.03595731942566689,
+            "raw_fold_scores": [
+                0.47911892029539094,
+                0.4763177998472116,
+                0.4070537305831423,
+                0.4666666666666666,
+                0.5186741363211952
+            ]
+        },
+        {
+            "num_features": 2,
+            "last_added_feature": "mc_std",
+            "last_feature_importance": 0.1204744737981035,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std"
+            ],
+            "mean_accuracy": 0.4475297088532383,
+            "std_dev": 0.053181862165110456,
+            "raw_fold_scores": [
+                0.46816908581614464,
+                0.5311942959001782,
+                0.36834733893557425,
+                0.42689393939393944,
+                0.4430438842203548
+            ]
+        },
+        {
+            "num_features": 3,
+            "last_added_feature": "pt_mean",
+            "last_feature_importance": 0.09770339377171942,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean"
+            ],
+            "mean_accuracy": 0.4961136575842458,
+            "std_dev": 0.07722830740051108,
+            "raw_fold_scores": [
+                0.6180290297937358,
+                0.46167557932263814,
+                0.42920804685510566,
+                0.41843434343434344,
+                0.5532212885154062
+            ]
+        },
+        {
+            "num_features": 4,
+            "last_added_feature": "pt_entropy",
+            "last_feature_importance": 0.08582325146125336,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy"
+            ],
+            "mean_accuracy": 0.5467647058823529,
+            "std_dev": 0.09264110530421461,
+            "raw_fold_scores": [
+                0.6765979118920296,
+                0.5336134453781513,
+                0.4857397504456327,
+                0.4174242424242425,
+                0.6204481792717087
+            ]
+        },
+        {
+            "num_features": 5,
+            "last_added_feature": "mc_mean",
+            "last_feature_importance": 0.07806533694170018,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean"
+            ],
+            "mean_accuracy": 0.512243018419489,
+            "std_dev": 0.07093222950679726,
+            "raw_fold_scores": [
+                0.6156098803157627,
+                0.46193022663610894,
+                0.5008912655971479,
+                0.4174242424242425,
+                0.565359477124183
+            ]
+        },
+        {
+            "num_features": 6,
+            "last_added_feature": "tt_std",
+            "last_feature_importance": 0.07767628987961386,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean",
+                "tt_std"
+            ],
+            "mean_accuracy": 0.5358369408369408,
+            "std_dev": 0.06950810323953799,
+            "raw_fold_scores": [
+                0.6548255665902725,
+                0.4901960784313726,
+                0.5140056022408963,
+                0.45479797979797976,
+                0.565359477124183
+            ]
+        },
+        {
+            "num_features": 7,
+            "last_added_feature": "hc_std",
+            "last_feature_importance": 0.07459655407329491,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean",
+                "tt_std",
+                "hc_std"
+            ],
+            "mean_accuracy": 0.5193355827179357,
+            "std_dev": 0.056706904380938436,
+            "raw_fold_scores": [
+                0.5441813088871913,
+                0.4075630252100841,
+                0.5443086325439267,
+                0.5357323232323231,
+                0.5648926237161531
+            ]
+        },
+        {
+            "num_features": 8,
+            "last_added_feature": "hc_mean",
+            "last_feature_importance": 0.07279826717580108,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean",
+                "tt_std",
+                "hc_std",
+                "hc_mean"
+            ],
+            "mean_accuracy": 0.48248747984042095,
+            "std_dev": 0.06207679922146797,
+            "raw_fold_scores": [
+                0.567990832696715,
+                0.39444868856633564,
+                0.5031830914183856,
+                0.515909090909091,
+                0.430905695611578
+            ]
+        },
+        {
+            "num_features": 9,
+            "last_added_feature": "tt_entropy",
+            "last_feature_importance": 0.0711068836213503,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean",
+                "tt_std",
+                "hc_std",
+                "hc_mean",
+                "tt_entropy"
+            ],
+            "mean_accuracy": 0.46237140310669717,
+            "std_dev": 0.07823920238550316,
+            "raw_fold_scores": [
+                0.5311942959001782,
+                0.34008148714031067,
+                0.5421441303794244,
+                0.4950757575757576,
+                0.4033613445378151
+            ]
+        },
+        {
+            "num_features": 10,
+            "last_added_feature": "hc_entropy",
+            "last_feature_importance": 0.06767809858999821,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean",
+                "tt_std",
+                "hc_std",
+                "hc_mean",
+                "tt_entropy",
+                "hc_entropy"
+            ],
+            "mean_accuracy": 0.461667939903234,
+            "std_dev": 0.06151972033411425,
+            "raw_fold_scores": [
+                0.5008912655971479,
+                0.3638910109498345,
+                0.5421441303794244,
+                0.4742424242424243,
+                0.4271708683473389
+            ]
+        },
+        {
+            "num_features": 11,
+            "last_added_feature": "tt_mean",
+            "last_feature_importance": 0.06750428424576077,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean",
+                "tt_std",
+                "hc_std",
+                "hc_mean",
+                "tt_entropy",
+                "hc_entropy",
+                "tt_mean"
+            ],
+            "mean_accuracy": 0.4579341736694678,
+            "std_dev": 0.06325938532228799,
+            "raw_fold_scores": [
+                0.5485103132161956,
+                0.36834733893557425,
+                0.5073847720906545,
+                0.4382575757575758,
+                0.4271708683473389
+            ]
+        },
+        {
+            "num_features": 12,
+            "last_added_feature": "mc_entropy",
+            "last_feature_importance": 0.06214130242369386,
+            "current_feature_set": [
+                "pt_std",
+                "mc_std",
+                "pt_mean",
+                "pt_entropy",
+                "mc_mean",
+                "tt_std",
+                "hc_std",
+                "hc_mean",
+                "tt_entropy",
+                "hc_entropy",
+                "tt_mean",
+                "mc_entropy"
+            ],
+            "mean_accuracy": 0.46012414056531703,
+            "std_dev": 0.05543026393965922,
+            "raw_fold_scores": [
+                0.5398523045581869,
+                0.38795518207282914,
+                0.5073847720906545,
+                0.4382575757575758,
+                0.4271708683473389
+            ]
+        }
+    ]
+}
