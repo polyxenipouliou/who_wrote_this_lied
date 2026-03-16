@@ -5,9 +5,7 @@
 
 ---
 
-## 3.1 Dataset Construction
-
-### 3.1.1 Data Sources
+## 3.1 Dataset
 
 Our dataset comprises 264 German Lieder drawn from two primary sources:
 
@@ -15,7 +13,7 @@ Our dataset comprises 264 German Lieder drawn from two primary sources:
 
 **Schubert Winterreise Dataset**: A specialized scholarly resource containing multiple editions of Schubert's seminal song cycle, offering opportunities for comparative analysis.
 
-### 3.1.2 Corpus Composition
+### 3.1.1 Corpus Composition
 
 The final dataset includes works by three Romantic-era composers:
 
@@ -30,7 +28,7 @@ The final dataset includes works by three Romantic-era composers:
 
 The class distribution reflects the relative size of each composer's Lieder output in the source repositories. While imbalanced, this distribution is representative of the available corpus and is addressed through balanced accuracy metrics and class-weighted loss functions.
 
-### 3.1.3 Preprocessing Pipeline
+### 3.1.2 Preprocessing Pipeline
 
 All scores underwent the following preprocessing steps:
 
@@ -158,36 +156,36 @@ This yields a 12-dimensional feature vector per piece (3 base features × 3 stat
 
 ---
 
-## 3.4 Handmade Feature Extension (60D)
+## 3.4 Handmade Feature Extension (55D)
 
-To complement the theory-driven 12D feature set, we extracted 60 additional statistical features across four musical dimensions:
+To complement the theory-driven 12D feature set, we extracted 55 additional statistical features across four musical dimensions:
 
 ### 3.4.1 Pitch Features (f1-f10)
 - Note count, pitch mean/std/range
 - Unique pitch classes, pitch class entropy
 - Register preferences (high/low pitch ratios)
 
-### 3.4.2 Velocity Features (f11-f15)
-- Mean, std, range of dynamics
-- Loud/soft note ratios
-
-### 3.4.3 Rhythm/Duration Features (f16-f23)
+### 3.4.2 Rhythm/Duration Features (f16-f23)
 - Duration statistics
 - Inter-onset intervals
 - Note density, articulation (staccato/legato ratios)
 
-### 3.4.4 Interval Features (f24-f30, f52-f60)
+### 3.4.3 Interval Features (f24-f30, f52-f60)
 - Interval statistics (mean, std, max)
 - Specific interval ratios (unison, stepwise, leaps)
 - Fine-grained interval categories (minor 3rd, perfect 5th, etc.)
 
-### 3.4.5 Texture Features (f47-f50)
+### 3.4.4 Texture Features (f47-f50)
 - Simultaneity statistics
 - Chord thickness measures
 
-### 3.4.6 Higher-Order Statistics (f31-f34, f35-f46)
+### 3.4.5 Higher-Order Statistics (f31-f34, f35-f46)
 - Skewness and kurtosis of distributions
 - Pitch class histogram (12 bins)
+
+### 3.4.6 Velocity Features (Excluded)
+
+**Important methodological note**: Velocity features (f11-f15) were initially considered but excluded from final analysis. MIDI velocity values in symbolic datasets often reflect editorial conventions of score transcribers rather than composer intent, as historical scores from the Romantic era specify dynamics qualitatively (e.g., *p*, *f*) rather than as numerical values (1-127). To ensure our model captures genuine stylistic patterns rather than data source artifacts, we excluded velocity features from our primary analysis.
 
 ---
 
@@ -211,11 +209,18 @@ This approach requires no manual feature engineering but produces uninterpretabl
 
 ### 3.6.1 Model Selection
 
-We employ Support Vector Machines (SVM) with Radial Basis Function (RBF) kernel for classification:
+We employ two classifiers for comparison:
 
+**Support Vector Machines (SVM)** with RBF kernel:
 - **Rationale**: SVMs are effective for high-dimensional data with limited samples
 - **Class Balancing**: `class_weight='balanced'` adjusts for imbalanced dataset
 - **Hyperparameters**: C=5.0 (determined through preliminary experiments)
+
+**Multi-Layer Perceptron (MLP)**:
+- **Architecture**: Input → Hidden1 (128, ReLU, Dropout 0.3) → Hidden2 (64, ReLU, Dropout 0.3) → Output (3, softmax)
+- **Optimizer**: Adam (lr=0.001)
+- **Regularization**: Early stopping (patience=20) to prevent overfitting
+- **Rationale**: Assess whether non-linear decision boundaries improve performance
 
 ### 3.6.2 Evaluation Protocol
 
@@ -266,10 +271,10 @@ Features with p < 0.05 are considered significantly discriminative.
 - Design decisions explained (metric grid, aggregation)
 - Connection to prior literature maintained
 
-### Technical Rigor:
-- Evaluation protocol clearly specified
-- Class imbalance addressed
-- Feature importance methodology described
+### Velocity Exclusion Rationale:
+- Clearly explained why velocity features were excluded
+- Editorial bias concern documented
+- Strengthens methodological rigor
 
 ### Length Management:
 - Current draft: ~2.5 pages
@@ -280,6 +285,9 @@ Features with p < 0.05 are considered significantly discriminative.
 
 ## Revision Checklist
 
+- [x] Remove velocity features from feature list (55D not 60D)
+- [x] Add velocity exclusion rationale section
+- [x] Add MLP classifier description
 - [ ] Verify all formulas are correct
 - [ ] Ensure hyperparameters match actual experiments
 - [ ] Check that feature names match code implementation

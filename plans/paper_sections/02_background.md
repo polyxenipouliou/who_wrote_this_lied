@@ -135,10 +135,13 @@ Our literature review reveals several gaps in existing research:
 
 4. **Lieder underrepresentation**: Despite the genre's importance in classical music, computational analysis of Lieder remains limited compared to instrumental music.
 
+5. **Velocity feature concerns**: Prior work has not adequately addressed the potential for editorial bias in MIDI velocity data, which may reflect transcriber conventions rather than composer intent.
+
 This project addresses these gaps by:
 - Focusing specifically on same-era Lieder classification
 - Providing detailed musicological interpretation of computational findings
 - Using interpretable, theory-grounded features
+- Explicitly excluding velocity features to avoid editorial bias
 - Releasing a curated Lieder dataset with extracted features
 
 ---
@@ -167,6 +170,10 @@ This project addresses these gaps by:
 - Critical evaluation of both handcrafted and deep learning approaches
 - Clear identification of research gaps
 
+### Velocity Exclusion:
+- Added new gap about velocity feature concerns
+- Justifies methodological decision in literature context
+
 ### Length Management:
 - Current draft: ~2 pages
 - May need to condense Table 1 or reduce composer descriptions
@@ -176,6 +183,7 @@ This project addresses these gaps by:
 
 ## Revision Checklist
 
+- [x] Add velocity feature concerns to gap identification
 - [ ] Verify all citations are accurate and in IEEE format
 - [ ] Ensure composer descriptions align with musicological literature
 - [ ] Check that gap identification leads naturally to our methodology

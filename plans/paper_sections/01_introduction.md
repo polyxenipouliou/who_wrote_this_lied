@@ -29,7 +29,7 @@ By comparing the relative importance of different feature categories, we aim to 
 
 **RQ3: How do handcrafted, domain-specific features compare to pretrained transformer representations for composer classification with limited training data?**
 
-This question addresses a practical concern in computational musicology: classical music corpora are often too small to effectively train or fine-tune large pretrained models. We compare our 60-dimensional handcrafted feature set against 768-dimensional embeddings from Adversarial-MidiBERT to determine whether domain knowledge encoded in feature design can compensate for limited data.
+This question addresses a practical concern in computational musicology: classical music corpora are often too small to effectively train or fine-tune large pretrained models. We compare our 55-dimensional handcrafted feature set (velocity features excluded) against 768-dimensional embeddings from Adversarial-MidiBERT to determine whether domain knowledge encoded in feature design can compensate for limited data.
 
 ---
 
@@ -39,11 +39,13 @@ This paper makes the following contributions:
 
 1. **Multi-layer Feature Framework**: We propose a theoretically-grounded approach combining three complementary feature categories—tonal tension (Spiral Array Model), harmonic complexity (pitch class entropy), and pianistic texture (onset density)—with detailed musicological justification for each design choice.
 
-2. **Systematic Comparison**: We present a comprehensive comparison of handcrafted features (12D, 30D, 60D) against pretrained transformer embeddings (768D MidiBERT) for composer classification, with results showing handcrafted features achieve 74.4% balanced accuracy versus 47.1% for MidiBERT on our 264-piece corpus.
+2. **Systematic Comparison**: We present a comprehensive comparison of handcrafted features (12D, 55D) against pretrained transformer embeddings (768D MidiBERT) for composer classification, with results showing handcrafted features achieve 65.0% balanced accuracy (peak ~70% with top 21 features) versus 45.3% for MidiBERT with MLP on our 264-piece corpus.
 
-3. **Feature Importance Analysis**: Using Random Forest importance ranking and ANOVA, we identify the most discriminative features and provide musicological interpretation of why these features capture composer-specific patterns.
+3. **Feature Importance Analysis**: Using Random Forest importance ranking and ANOVA, we identify the most discriminative features (note count, unison ratio, stepwise ratio) and provide musicological interpretation of why these features capture composer-specific patterns.
 
-4. **Reproducible Pipeline**: We release all code, extracted features, and experimental configurations to support reproducible research in computational composer classification.
+4. **Velocity Feature Exclusion**: We explicitly exclude velocity features from our analysis due to concerns about editorial bias in MIDI transcriptions, ensuring that classification is based on composer-intentioned patterns rather than transcriber conventions.
+
+5. **Reproducible Pipeline**: We release all code, extracted features, and experimental configurations to support reproducible research in computational composer classification.
 
 ---
 
@@ -51,7 +53,7 @@ This paper makes the following contributions:
 
 It is important to emphasize the exploratory nature of this research. We do not claim that our feature set provides definitive composer attribution, nor do we suggest that computational analysis can replace musicological expertise. Rather, we position this work as:
 
-- **Hypothesis Generation**: Computational findings can suggest new avenues for musicological investigation (e.g., "Why is velocity range the most discriminative feature?")
+- **Hypothesis Generation**: Computational findings can suggest new avenues for musicological investigation (e.g., "Why is note count the most discriminative feature?")
 
 - **Quantitative Complement**: Statistical analysis complements qualitative musicological analysis by providing measurable evidence for stylistic observations
 
@@ -90,10 +92,20 @@ The remainder of this paper is organized as follows: Section 2 reviews relevant 
 - May need to condense for final 6-page limit
 - Consider moving some background to Section 2
 
+### Key Updates from Original:
+- Updated accuracy numbers (65.0%, ~70%, 45.3%)
+- Updated feature dimensions (55D not 60D)
+- Added velocity exclusion to contributions
+- Updated top features (note count, unison ratio, stepwise ratio)
+
 ---
 
 ## Revision Checklist
 
+- [x] Update accuracy numbers (65.0%, ~70%, 45.3%)
+- [x] Update feature dimensions (55D not 60D)
+- [x] Add velocity exclusion to contributions
+- [x] Update top features in RQ3
 - [ ] Verify all citations are in IEEE format
 - [ ] Ensure research questions are clearly stated
 - [ ] Check that contributions are specific and measurable

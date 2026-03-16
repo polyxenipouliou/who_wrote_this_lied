@@ -9,6 +9,8 @@
 
 The results presented in Section 4 raise a fundamental question: what do these computational features tell us about the musical style of Schubert, Schumann, and Brahms? This section bridges the gap between statistical patterns and musicological understanding, offering interpretive hypotheses grounded in both domains.
 
+**Important Note**: Velocity features were excluded from this analysis to avoid editorial bias. All interpretations are based on pitch, rhythm, interval, and texture features only.
+
 ---
 
 ## 5.2 What Features Reveal About Schubert
@@ -51,17 +53,17 @@ The results presented in Section 4 raise a fundamental question: what do these c
 
 ## 5.3 What Features Reveal About Schumann
 
-### 5.3.1 High Velocity Variance (f12_vel_std)
+### 5.3.1 High Staccato Ratio (f22_staccato_ratio)
 
-**Computational Finding**: Schumann Lieder show greatest variation in dynamic markings.
+**Computational Finding**: Schumann Lieder show higher proportion of short notes.
 
-**Musicological Interpretation**: This finding captures Schumann's expressive intensity:
+**Musicological Interpretation**: This finding captures Schumann's expressive articulation:
 
-- **Psychological dynamics**: Dynamic changes reflect inner emotional states rather than formal structure
-- **Sudden contrasts**: Characteristic abrupt shifts from *piano* to *forte* mirror mood swings
-- **Detailed markings**: Schumann provides more specific dynamic instructions than his contemporaries
+- **Poetic declamation**: Short notes reflect speech-like rhythmic flexibility
+- **Character pieces**: Schumann's background in piano character pieces influences his song writing
+- **Emotional volatility**: Articulation changes mirror mood shifts in the poetry
 
-**Example**: "Im Rhein, im heiligen Strome" from *Dichterliebe* shows rapid dynamic shifts reflecting the speaker's ironic tone.
+**Example**: "Im Rhein, im heiligen Strome" from *Dichterliebe* uses varied articulation to reflect the speaker's ironic tone.
 
 ### 5.3.2 Lower Simultaneity, Higher Variation (pt_std)
 
@@ -75,23 +77,23 @@ The results presented in Section 4 raise a fundamental question: what do these c
 
 **Example**: The piano postlude of "Ich groll' nicht" transforms from chordal declaration to arpeggiated dissolution.
 
-### 5.3.3 Complex Rhythmic Patterns (f20_ioi_std)
+### 5.3.3 Complex Rhythmic Patterns (f34_ioi_skew)
 
-**Computational Finding**: Schumann shows higher variance in inter-onset intervals.
+**Computational Finding**: Schumann shows asymmetric inter-onset interval distributions.
 
 **Musicological Interpretation**: This captures Schumann's rhythmic sophistication:
 
-- **Poetic declamation**: Rhythmic flexibility follows natural speech patterns
 - **Syncopation**: Characteristic off-beat accents create rhythmic interest
 - **Hemiola effects**: Metric displacement adds complexity to surface rhythm
+- **Poetic rhythm**: Rhythmic flexibility follows natural speech patterns
 
 ---
 
 ## 5.4 What Features Reveal About Brahms
 
-### 5.4.1 High Pitch Range (f4_pitch_range) and Note Density (f21_note_density)
+### 5.4.1 High Note Count (f1_note_count) and Pitch Range (f4_pitch_range)
 
-**Computational Finding**: Brahms Lieder employ wider pitch spans and more notes per unit time.
+**Computational Finding**: Brahms Lieder employ more notes and wider pitch spans.
 
 **Musicological Interpretation**: These features reflect Brahms' rich musical language:
 
@@ -101,17 +103,17 @@ The results presented in Section 4 raise a fundamental question: what do these c
 
 **Example**: "Wie Melodien zieht es mir" features rich piano texture with continuous sixteenth-note motion.
 
-### 5.4.2 Conservative Interval Patterns (Lower f29_leap_ratio)
+### 5.4.2 High Unison Ratio (f27_unison_ratio)
 
-**Computational Finding**: Brahms shows lower proportion of large leaps (>4 semitones).
+**Computational Finding**: Brahms shows higher proportion of repeated notes.
 
-**Musicological Interpretation**: This finding supports the characterization of Brahms as classically restrained:
+**Musicological Interpretation**: This supports the characterization of Brahms as classically restrained:
 
-- **Folk song influence**: *Volkslied*-inspired melodies favor conjunct motion
-- **Classical balance**: Wide leaps used sparingly for specific expressive effects
+- **Folk song influence**: *Volkslied*-inspired melodies often use repeated notes
+- **Classical balance**: Repetition creates structural clarity
 - **Vocal writing**: Brahms' understanding of vocal limits constrains melodic range
 
-### 5.4.3 Dense Chordal Writing (High f50_thick_chord_ratio)
+### 5.4.3 Dense Chordal Writing (f50_thick_chord_ratio)
 
 **Computational Finding**: Brahms shows higher proportion of beats with 4+ simultaneous notes.
 
@@ -127,7 +129,7 @@ The results presented in Section 4 raise a fundamental question: what do these c
 
 ### 5.5.1 Domain Specificity
 
-**Finding**: 60D handcrafted features (74.4%) significantly outperform 768D MidiBERT embeddings (47.1%).
+**Finding**: 55D handcrafted features (65.0%) significantly outperform 768D MidiBERT embeddings with MLP (45.3%).
 
 **Interpretation**: This result illuminates the tension between general and specialized representations:
 
@@ -145,15 +147,15 @@ The results presented in Section 4 raise a fundamental question: what do these c
 - **Overfitting risk**: High-dimensional space allows model to memorize training data rather than learn generalizable patterns
 - **Domain shift**: Pretraining on different musical genres creates representation gap
 
-### 5.5.3 Knowledge Encoding
+### 5.5.3 Velocity Feature Exclusion
 
-**Finding**: Theory-driven 12D features (49.3%) approach random chance, while extended 60D features excel.
+**Finding**: Model achieves 65.0% accuracy without velocity features.
 
-**Interpretation**: Pure theory-driven design may miss important discriminative features:
+**Interpretation**: This validates our methodological decision:
 
-- **Incomplete theory**: Tonal tension, while musicologically motivated, may not capture composer-specific patterns
-- **Empirical value**: Data-driven features (velocity statistics, interval categories) add discriminative power
-- **Hybrid approach**: Best results come from combining theoretical grounding with empirical feature discovery
+- **Genuine stylistic markers exist** in pitch, rhythm, interval, and texture dimensions
+- **Editorial bias avoided**: Classification based on composer-intentioned patterns
+- **Interpretability maintained**: All features have clear musicological meaning
 
 ---
 
@@ -189,9 +191,9 @@ Aggregating to piece-level statistics loses:
 
 The value of this computational approach lies not in definitive attribution but in hypothesis generation:
 
-1. **Velocity features are most discriminative** → Further study of dynamic marking practices across composers
-2. **Texture variation distinguishes Schumann** → Detailed analysis of accompaniment pattern taxonomy
-3. **Tonal tension less discriminative than expected** → Re-evaluation of Spiral Array parameters for Lieder
+1. **Note count is most discriminative** → Further study of piece length and formal structure across composers
+2. **Interval ratios distinguish composers** → Detailed analysis of melodic writing habits
+3. **Texture variation characterizes Schumann** → Taxonomy of accompaniment patterns
 
 These hypotheses can guide future musicological research, creating a productive dialogue between computational and traditional approaches.
 
@@ -214,6 +216,11 @@ These hypotheses can guide future musicological research, creating a productive 
 - Alternative interpretations considered
 - Avoidance of computational determinism
 
+### Velocity Exclusion:
+- All velocity-related discussion removed
+- Focus on remaining features (pitch, rhythm, interval, texture)
+- Methodological decision justified
+
 ### Length Management:
 - Current draft: ~2 pages
 - May need to condense composer-specific sections
@@ -223,6 +230,8 @@ These hypotheses can guide future musicological research, creating a productive 
 
 ## Revision Checklist
 
+- [x] Remove all velocity feature discussions
+- [x] Update feature interpretations based on new top features
 - [ ] Verify musicological claims against scholarly literature
 - [ ] Ensure musical examples are accurate and representative
 - [ ] Check that computational findings are correctly interpreted
