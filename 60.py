@@ -89,11 +89,11 @@ def extract_60_custom_features(midi_path):
     features['f10_low_pitch_ratio'] = np.sum(pitches < 48) / len(pitches)
 
     # Velocity (Dynamics) Statistics
-    features['f11_vel_mean'] = np.mean(vels)
-    features['f12_vel_std'] = np.std(vels)
-    features['f13_vel_range'] = np.max(vels) - np.min(vels)
-    features['f14_loud_note_ratio'] = np.sum(vels > 80) / len(vels)
-    features['f15_soft_note_ratio'] = np.sum(vels < 40) / len(vels)
+    # features['f11_vel_mean'] = np.mean(vels)
+    # features['f12_vel_std'] = np.std(vels)
+    # features['f13_vel_range'] = np.max(vels) - np.min(vels)
+    # features['f14_loud_note_ratio'] = np.sum(vels > 80) / len(vels)
+    # features['f15_soft_note_ratio'] = np.sum(vels < 40) / len(vels)
 
     # Duration and Rhythm Statistics
     features['f16_dur_mean'] = np.mean(durs)
@@ -198,7 +198,7 @@ if __name__ == "__main__":
 
     # Save extracted features to CSV
     out_df = pd.DataFrame(extracted_data)
-    out_csv = "handmade_60_features.csv"
+    out_csv = "handmade_55_features.csv"
     out_df.to_csv(out_csv, index=False)
     print(f"\n[+] Extraction complete! Features saved to {out_csv}")
 

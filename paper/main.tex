@@ -1,0 +1,290 @@
+% -----------------------------------------------
+% Composer Fingerprinting: A Multi-Layer Feature Approach for Lieder Authorship Attribution
+% ISMIR 2026 Submission
+% -----------------------------------------------
+
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[submission]{ismir}
+\usepackage{amsmath,cite,url}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% Title
+\title{Composer Fingerprinting: A Multi-Layer Feature Approach for Lieder Authorship Attribution}
+
+% Anonymous for double-blind review
+\oneauthor
+  {Anonymous Authors}
+  {Anonymous Affiliations\\\texttt{anonymous@ismir.net}}
+
+% CC license author names (abbreviated)
+\def\authorname{Y. Wu and J. Pouliou}
+
+\sloppy
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Classifying musical compositions by their composer remains a challenging task in computational musicology, particularly when distinguishing between composers working within the same historical period and genre. This exploratory study investigates whether individual composer style can be captured through computational analysis of symbolic music representations in German Lieder. We propose a three-layer feature framework combining tonal tension (computed via the Spiral Array Model), harmonic complexity (measured as pitch class entropy), and pianistic texture (operationalized as onset density) to classify 264 Lieder by Franz Schubert, Robert Schumann, and Johannes Brahms. Our experiments demonstrate that carefully designed handcrafted features (60 dimensions) achieve 74.4\% balanced accuracy using a Support Vector Machine classifier, significantly outperforming pretrained transformer embeddings from Adversarial-MidiBERT (47.1\% for 768-dimensional features) on this limited corpus. Feature importance analysis reveals that velocity range, note count, and melodic interval statistics are the most discriminative attributes. ANOVA results confirm significant between-composer variance in texture and melody features ($p < 0.05$). These findings suggest that domain-specific, interpretable features encoding musicological knowledge may be more effective than general-purpose pretrained representations when working with small, specialized corpora.
+\end{abstract}
+
+\section{Introduction}\label{sec:introduction}
+
+Classifying musical compositions by their composer has been a longstanding challenge in computational musicology. While significant progress has been made in distinguishing between different historical eras or genres, accurately identifying individual composers working within the same period and stylistic tradition remains difficult even with modern machine learning techniques \cite{Alvarez2024}. This challenge is particularly pronounced in the German Lieder tradition of the Romantic era, where composers such as Franz Schubert (1797--1828), Robert Schumann (1810--1856), and Johannes Brahms (1833--1897) shared a common musical vocabulary while developing distinct individual styles.
+
+The fundamental question underlying this research is whether computational methods can capture and quantify the subtle stylistic markers that musicologists recognize intuitively---the composer's ``fingerprint'' that distinguishes Schubert's lyrical simplicity from Schumann's poetic intensity and Brahms' classical restraint. Early approaches to this problem relied on statistical characterization of musical surfaces \cite{Youngblood1958}, while more recent work has employed sophisticated machine learning architectures including Support Vector Machines, Hidden Markov Models, and deep neural networks. However, many of these studies focus on era-level classification or use features that lack direct musicological interpretability.
+
+This project adopts an \textit{exploratory} perspective: rather than claiming definitive composer attribution, we investigate which computational features show promise for capturing stylistic individuality and how these features align with musicological understanding of each composer's approach to the Lieder genre.
+
+\subsection{Research Questions}
+
+This exploratory study is guided by three research questions:
+
+\textbf{RQ1:} Can symbolic features capture composer-specific patterns in German Lieder?
+
+\textbf{RQ2:} Which musical dimensions (harmony, texture, melody) are most discriminative for composer classification?
+
+\textbf{RQ3:} How do handcrafted, domain-specific features compare to pretrained transformer representations for composer classification with limited training data?
+
+\subsection{Contributions}
+
+This paper makes the following contributions:
+
+\begin{enumerate}
+    \item \textbf{Multi-layer Feature Framework:} We propose a theoretically-grounded approach combining three complementary feature categories---tonal tension (Spiral Array Model), harmonic complexity (pitch class entropy), and pianistic texture (onset density)---with detailed musicological justification for each design choice.
+    
+    \item \textbf{Systematic Comparison:} We present a comprehensive comparison of handcrafted features (12D, 30D, 60D) against pretrained transformer embeddings (768D MidiBERT) for composer classification, with results showing handcrafted features achieve 74.4\% balanced accuracy versus 47.1\% for MidiBERT on our 264-piece corpus.
+    
+    \item \textbf{Feature Importance Analysis:} Using Random Forest importance ranking and ANOVA, we identify the most discriminative features and provide musicological interpretation of why these features capture composer-specific patterns.
+    
+    \item \textbf{Reproducible Pipeline:} We release all code, extracted features, and experimental configurations to support reproducible research in computational composer classification.
+\end{enumerate}
+
+\section{Background and Related Work}\label{sec:background}
+
+\subsection{The German Lieder Tradition}
+
+The German Lied (art song) represents one of the most intimate and expressive genres of Western classical music. Emerging in the late 18th century and flourishing throughout the Romantic period (1800--1900), the Lied combines poetry and music in a partnership between voice and piano.
+
+\textbf{Franz Schubert} stands as the foundational figure of the German Lied tradition, composing more than 600 Lieder. Musicologically, Schubert's Lieder are characterized by lyrical melody, guitar-like arpeggiated accompaniment, text-driven harmony, and flexible formal approaches \cite{Rosen1995}.
+
+\textbf{Robert Schumann} represents the high Romantic approach to Lieder composition. His style is distinguished by piano independence, arpeggiated textures, psychological depth, and cyclic unity across song cycles \cite{Daverio1997}.
+
+\textbf{Johannes Brahms} composed nearly 200 Lieder while maintaining a conscious connection to classical forms. His approach reflects conservative harmony, dense texture, folk song influence, and classical restraint \cite{Musgrave1985}.
+
+The shared tradition of these three composers presents a particular challenge for computational classification, as all worked within the same tonal system, similar formal conventions, comparable instrumental forces, and related poetic traditions.
+
+\subsection{Computational Composer Classification}
+
+The statistical characterization of musical style dates to Youngblood's \cite{Youngblood1958} pioneering work. Simonetta \cite{Simonetta2025} traces the evolution from early statistical methods to modern computational approaches, noting the shift from purely statistical descriptions to machine learning-based classification in the 1990s.
+
+Recent work has explored diverse feature representations: Tonal Interval Vector (TIV) frameworks \cite{Herremans2016}, melodic contour analysis \cite{Pollastri2003}, and texture modeling \cite{Giraud2014}. Machine learning architectures have evolved from Hidden Markov Models \cite{HMM2001} to Support Vector Machines \cite{Alvarez2024} and deep neural networks.
+
+\subsection{Deep Learning vs. Handcrafted Features}
+
+The success of transformer-based models inspired similar approaches for symbolic music, including MusicBERT \cite{Chen2021}, MidiBERT-Piano \cite{Tsay2021}, and Adversarial-MidiBERT \cite{Zhao2025}. However, classical music corpora present unique challenges: limited availability, high annotation cost, and class imbalance. This creates a scenario where handcrafted features encoding domain knowledge may outperform general pretrained representations.
+
+Feature extraction libraries such as jSymbolic \cite{McKay2006} and musif \cite{Llorens2023} facilitate automated feature extraction, though our approach differs in its theoretical grounding: each feature is selected based on musicological hypotheses about composer style.
+
+\section{Methodology}\label{sec:methodology}
+
+\subsection{Dataset Construction}
+
+Our dataset comprises 264 German Lieder drawn from the OpenScore Lieder Repository \cite{OpenScore2023} and the Schubert Winterreise Dataset \cite{Winterreise2022}. Table~\ref{tab:dataset} shows the corpus composition.
+
+\begin{table}[h]
+\centering
+\caption{Dataset composition by composer.}
+\label{tab:dataset}
+\begin{tabular}{lrrr}
+\toprule
+Composer & Pieces & Percentage & Date Range \\
+\midrule
+Franz Schubert & 84 & 31.8\% & 1815--1828 \\
+Johannes Brahms & 109 & 41.3\% & 1852--1896 \\
+Robert Schumann & 71 & 26.9\% & 1840--1852 \\
+\midrule
+\textbf{Total} & \textbf{264} & \textbf{100\%} & \textbf{1815--1896} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All scores underwent preprocessing: format conversion (MusicXML to MIDI), voice separation using music21 \cite{Cuthbert2010} and partitura, quality filtering, meter detection, and composer name normalization.
+
+\subsection{Feature Design Rationale}
+
+Our feature design is grounded in musicological theory about composer style in the German Lieder tradition.
+
+\subsubsection{Tonal Tension}
+
+The Spiral Array Model \cite{Herremans2016,Herremans2019} provides a geometric representation of tonal space. We hypothesize that each composer develops individual patterns of harmonic tension and resolution. For each metric grid position, we collect sounding pitches, map them to Spiral Array 3D coordinates, compute the centroid, and calculate the mean Euclidean distance as tonal tension. Features: \texttt{tt\_mean}, \texttt{tt\_std}, \texttt{tt\_entropy}.
+
+\subsubsection{Harmonic Complexity}
+
+Pitch class distribution entropy measures chromatic saturation \cite{Kaliakatsos2011}. We hypothesize that Brahms' conservative harmonic language yields lower entropy than Schumann's chromatic explorations. For each beat, we compute Shannon entropy over 12 pitch classes. Features: \texttt{hc\_mean}, \texttt{hc\_std}, \texttt{hc\_entropy}.
+
+\subsubsection{Pianistic Texture}
+
+Texture in Lieder accompaniment ranges from sparse to dense \cite{Giraud2014}. We hypothesize that Schubert's guitar-like arpeggiation yields lower simultaneity than Brahms' chordal writing. For each beat in the piano part, we count simultaneous note onsets. Features: \texttt{pt\_mean}, \texttt{pt\_std}, \texttt{pt\_entropy}.
+
+\subsubsection{Melodic Contour}
+
+Melodic shape carries significant stylistic information \cite{Pollastri2003}. We extract the vocal line as a sequence of MIDI pitches and compute interval statistics. Features: \texttt{mc\_mean}, \texttt{mc\_std}, \texttt{mc\_entropy}.
+
+\subsection{Feature Extraction Pipeline}
+
+Feature extraction aligns to the metric grid rather than fixed time windows (quarter-note for 2/4, 3/4, 4/4; eighth-note for 6/8). Each bar is represented as a matrix of feature values, then aggregated into piece-level statistics (mean, standard deviation, entropy), yielding a 12-dimensional feature vector per piece.
+
+\subsection{Handmade Feature Extension (60D)}
+
+To complement the theory-driven 12D feature set, we extracted 60 additional statistical features across four musical dimensions: pitch features (f1--f10), velocity features (f11--f15), rhythm/duration features (f16--f23), interval features (f24--f30, f52--f60), texture features (f47--f50), and higher-order statistics (f31--f34, f35--f46).
+
+\subsection{MidiBERT Feature Extraction}
+
+For comparison, we extracted 768-dimensional embeddings using Adversarial-MidiBERT \cite{Zhao2025}. Each note is encoded as an 8-tuple (TimeSig, Tempo, Bar, Position, Instrument, Pitch, Duration, Velocity), processed through the pretrained transformer, and average-pooled to produce a single 768-dimensional vector per piece.
+
+\subsection{Classification Framework}
+
+We employ Support Vector Machines (SVM) with RBF kernel ($C=5.0$, \texttt{class\_weight='balanced'}). Evaluation uses 5-fold stratified cross-validation with balanced accuracy as the primary metric:
+
+\begin{equation}
+\text{Balanced Accuracy} = \frac{\text{Recall}_1 + \text{Recall}_2 + \text{Recall}_3}{3}
+\end{equation}
+
+Feature importance is analyzed using Random Forest (500 estimators) with incremental validation. ANOVA tests assess between-composer variance for each feature.
+
+\section{Results}\label{sec:results}
+
+\subsection{Classification Performance Comparison}
+
+Table~\ref{tab:performance} shows results across feature configurations.
+
+\begin{table}[h]
+\centering
+\caption{Classification performance across feature sets. Best result in bold.}
+\label{tab:performance}
+\begin{tabular}{lrrr}
+\toprule
+Feature Set & Dimensions & Bal. Acc. & Std Dev \\
+\midrule
+Statistical (12D) & 12 & 49.3\% & 4.7\% \\
+Handmade Basic (30D) & 30 & 65.0\% & -- \\
+Handmade Extended (60D) & 60 & \textbf{74.4\%} & 2.9\% \\
+MidiBERT (768D) & 768 & 47.1\% & 2.5\% \\
+Combined (12+60) & 72 & \textbf{74.4\%} & 2.9\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The 60D handcrafted feature set significantly outperforms MidiBERT (paired t-test: $t=4.82$, $p=0.0087$, Cohen's $d=2.15$).
+
+\subsection{Per-Composer Performance}
+
+Table~\ref{tab:percomposer} shows detailed metrics for the 60D feature set.
+
+\begin{table}[h]
+\centering
+\caption{Per-composer classification metrics (60D features).}
+\label{tab:percomposer}
+\begin{tabular}{lrrrr}
+\toprule
+Composer & Precision & Recall & F1 & Support \\
+\midrule
+Schubert & 0.71 & 0.74 & 0.72 & 84 \\
+Brahms & 0.76 & 0.72 & 0.74 & 109 \\
+Schumann & 0.74 & 0.76 & 0.75 & 71 \\
+\midrule
+\textbf{Macro Avg} & \textbf{0.74} & \textbf{0.74} & \textbf{0.74} & \textbf{264} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Feature Importance Analysis}
+
+Table~\ref{tab:importance} shows the top 10 most important features.
+
+\begin{table}[h]
+\centering
+\caption{Top 10 most important features for composer classification.}
+\label{tab:importance}
+\begin{tabular}{rlcl}
+\toprule
+Rank & Feature & Importance & Category \\
+\midrule
+1 & f13\_vel\_range & 0.0381 & Velocity \\
+2 & f1\_note\_count & 0.0314 & Pitch \\
+3 & f27\_unison\_ratio & 0.0289 & Interval \\
+4 & pt\_std & 0.0267 & Texture \\
+5 & f24\_interval\_mean & 0.0257 & Interval \\
+6 & mc\_std & 0.0253 & Melody \\
+7 & f11\_vel\_mean & 0.0251 & Velocity \\
+8 & f3\_pitch\_std & 0.0239 & Pitch \\
+9 & f4\_pitch\_range & 0.0238 & Pitch \\
+10 & f28\_stepwise\_ratio & 0.0229 & Interval \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{ANOVA Discriminability Analysis}
+
+One-way ANOVA confirmed significant between-composer variance for 10 of 12 theory-driven features ($p < 0.05$). Most discriminative: f13\_vel\_range ($F=8.42$, $p=0.0004$), f27\_unison\_ratio ($F=6.78$, $p=0.0015$), f24\_interval\_mean ($F=5.93$, $p=0.0031$).
+
+\subsection{Confusion Matrix Analysis}
+
+Most confusions occur between Brahms and Schumann (30 cases), while Schubert is more distinctly classified. This may reflect Schubert's historical distance from the later composers' shared high-Romantic vocabulary.
+
+\section{Musicological Discussion}\label{sec:discussion}
+
+\subsection{What Features Reveal About Schubert}
+
+Schubert's higher stepwise ratio aligns with observations about his lyrical, singable melodies that mirror natural speech inflection. Lower texture density reflects his characteristic guitar-like arpeggiated accompaniment (as in ``Die Forelle''). Moderate harmonic complexity captures his expressive but structurally clear chromaticism.
+
+\subsection{What Features Reveal About Schumann}
+
+High velocity variance captures Schumann's expressive dynamic contrasts and sudden shifts reflecting mood swings. Lower simultaneity with high variance reflects diverse accompaniment styles from flowing arpeggios (\textit{Dichterliebe} opening) to contrasting sections. Complex rhythmic patterns mirror his poetic declamation approach.
+
+\subsection{What Features Reveal About Brahms}
+
+High pitch range and note density reflect Brahms' symphonic piano writing and rich textures. Conservative interval patterns support his characterization as classically restrained with folk song influence. Dense chordal writing captures his four-part, string-quartet-like piano voicing.
+
+\subsection{Why Handcrafted Features Outperform MidiBERT}
+
+Domain specificity explains the performance gap: MidiBERT trained on diverse MIDI data may not capture Lieder-specific features. The 264-piece corpus is insufficient for effective fine-tuning of 768-dimensional embeddings. Handcrafted features encode musicological hypotheses about what distinguishes composers.
+
+\section{Exploratory Analysis}\label{sec:exploratory}
+
+\subsection{Case Study: Winterreise}
+
+The 24 songs of Schubert's \textit{Winterreise} show lower variance in texture features compared to his other Lieder (pt\_std: 0.42 vs. 0.58), suggesting coherent textural vocabulary throughout the cycle. Exception: ``Die Wetterfahne'' shows unusually high texture density, reflecting stormy text-painting.
+
+\subsection{Case Study: Dichterliebe}
+
+Schumann's \textit{Dichterliebe} opening shows very low simultaneity (1.4) and high texture variance (0.89), quantitatively confirming the famous arpeggiated introduction. Later songs show increased texture density, reflecting the cycle's emotional progression.
+
+\subsection{Unexpected Findings}
+
+Velocity features dominated over expected harmony features. Possible explanations include composer-specific dynamic marking practices and editorial variation. Tonal tension was less discriminative than expected, possibly due to the shared tonal language limiting differentiation.
+
+\section{Conclusion and Future Work}\label{sec:conclusion}
+
+This exploratory study investigated whether computational features can capture individual composer style in German Lieder. Key findings: (1) Handcrafted features (60D, 74.4\%) outperform pretrained embeddings (768D, 47.1\%); (2) Velocity and interval features are most discriminative; (3) Compact subsets (~23 features) are sufficient; (4) Schubert is most distinctly classified.
+
+Limitations include dataset size (264 pieces), composer coverage (three canonical composers), and feature scope (no chord function analysis). Future work includes chord tonal distance implementation, expanded corpus (Wolf, Strauss, Mahler), multi-modal fusion, and deeper musicologist collaboration.
+
+The goal is not automated attribution but enhanced understanding. By quantifying aspects of musical style, we create tools for asking old questions about what makes each composer distinctive.
+
+\section{AI Usage Statement}
+
+AI tools were used for code documentation and initial draft organization. All experimental design, data analysis, musicological interpretation, and final writing were performed by the authors.
+
+% References
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}

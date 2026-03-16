@@ -4,12 +4,12 @@ import os
 # 1. Define file paths
 file_paths = {
     # "bert": r"E:\Master\symbolic_2026\Adversarial-MidiBERT\midibert_768d_features.csv",
-    "features": r"E:\Master\symbolic_2026\handmade_60_features.csv",
+    "features": r"E:\Master\symbolic_2026\handmade_55_features.csv",
     "stats": r"E:\Master\symbolic_2026\features\filtered_features_statistical.csv"
 }
 
 # Define output path
-output_path = r"E:\Master\symbolic_2026\feature_12+60.csv"
+output_path = r"E:\Master\symbolic_2026\feature_12+55.csv"
 
 
 def merge_music_data(files, save_to):
