@@ -164,18 +164,7 @@ Note count (f1) was initially included as a feature but was removed because it s
 ### Velocity Feature Exclusion
 Velocity features (f11-f15) were excluded because MIDI velocity values in symbolic datasets often reflect editorial conventions of score transcribers rather than composer intent. Historical scores from the Romantic era specify dynamics qualitatively (e.g., *p*, *f*) rather than as numerical values (1-127).
 
-## Citation
 
-If you use this code or dataset, please cite:
-
-```bibtex
-@unpublished{wu2026composer,
-  title={Composer Fingerprinting: A Multi-Layer Feature Approach for Lieder Authorship Attribution},
-  author={Wu, Yuhang and Pouliou, Polyxeni},
-  note={Course Project, 2026},
-  year={2026}
-}
-```
 
 ## License
 
