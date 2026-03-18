@@ -31,7 +31,7 @@
 \maketitle
 
 \begin{abstract}
-Classifying musical compositions by their composer remains a challenging task in computational musicology, particularly when distinguishing between composers working within the same historical period and genre. This exploratory study investigates whether individual composer style can be captured through computational analysis of symbolic music representations in German Lieder. We propose a three-layer feature framework combining tonal tension (computed via the Spiral Array Model), harmonic complexity (measured as pitch class entropy), and pianistic texture (operationalized as onset density) to classify 264 Lieder by Franz Schubert, Robert Schumann, and Johannes Brahms. Our experiments demonstrate that carefully designed handcrafted features (55 dimensions, velocity features excluded to avoid editorial bias in MIDI transcriptions) achieve 65.0\% balanced accuracy using a Support Vector Machine classifier, with peak performance of approximately 70\% using only the top 21 features. This significantly outperforms pretrained transformer embeddings with MLP classifier (45.3\% for 768-dimensional MidiBERT features) on this limited corpus. Feature importance analysis reveals that note count, unison ratio, and stepwise melodic motion are the most discriminative attributes. ANOVA results confirm significant between-composer variance in texture and melody features ($p < 0.05$). These findings suggest that domain-specific, interpretable features encoding musicological knowledge may be more effective than general-purpose pretrained representations when working with small, specialized corpora.
+Classifying musical compositions by their composer remains a challenging task in computational musicology, particularly when distinguishing between composers working within the same historical period and genre. This exploratory study investigates whether individual composer style can be captured through computational analysis of symbolic music representations in German Lieder. We propose a three-layer feature framework combining tonal tension (computed via the Spiral Array Model), harmonic complexity (measured as pitch class entropy), and pianistic texture (operationalized as onset density) to classify 264 Lieder by Franz Schubert, Robert Schumann, and Johannes Brahms. Our experiments demonstrate that carefully designed handcrafted features (54 dimensions, excluding note count and velocity to avoid confounding variables) achieve approximately 67\% balanced accuracy using a Support Vector Machine classifier with feature selection (top 20 features). This significantly outperforms both SVM (47.1\%) and MLP (45.3\%) classifiers on 768-dimensional pretrained transformer embeddings from Adversarial-MidiBERT on this limited corpus. Feature importance analysis reveals that unison ratio, texture variation, and pitch standard deviation are the most discriminative attributes. ANOVA results confirm significant between-composer variance in texture and melody features ($p < 0.05$). These findings suggest that domain-specific, interpretable features encoding musicological knowledge may be more effective than general-purpose pretrained representations when working with small, specialized corpora.
 \end{abstract}
 
 \section{Introduction}\label{sec:introduction}
@@ -59,11 +59,11 @@ This paper makes the following contributions:
 \begin{enumerate}
     \item \textbf{Multi-layer Feature Framework:} We propose a theoretically-grounded approach combining three complementary feature categories---tonal tension (Spiral Array Model), harmonic complexity (pitch class entropy), and pianistic texture (onset density)---with detailed musicological justification for each design choice.
     
-    \item \textbf{Systematic Comparison:} We present a comprehensive comparison of handcrafted features (12D, 55D) against pretrained transformer embeddings (768D MidiBERT) for composer classification, with results showing handcrafted features achieve 65.0\% balanced accuracy (peak ~70\% with feature selection) versus 45.3\% for MidiBERT with MLP on our 264-piece corpus.
+    \item \textbf{Systematic Comparison:} We present a comprehensive comparison of handcrafted features (12D, 54D) against pretrained transformer embeddings (768D MidiBERT) with both SVM and MLP classifiers, with results showing handcrafted features achieve ~67\% balanced accuracy (with feature selection) versus 47.1\% (SVM) and 45.3\% (MLP) for MidiBERT on our 264-piece corpus.
     
-    \item \textbf{Feature Importance Analysis:} Using Random Forest importance ranking and ANOVA, we identify the most discriminative features (note count, unison ratio, stepwise ratio) and provide musicological interpretation of why these features capture composer-specific patterns.
+    \item \textbf{Feature Importance Analysis:} Using Random Forest importance ranking and ANOVA, we identify the most discriminative features (unison ratio, texture variation, pitch standard deviation) and provide musicological interpretation of why these features capture composer-specific patterns.
     
-    \item \textbf{Velocity Feature Exclusion:} We explicitly exclude velocity features from our analysis due to concerns about editorial bias in MIDI transcriptions, ensuring that classification is based on composer-intentioned patterns rather than transcriber conventions.
+    \item \textbf{Methodological Rigor:} We explicitly exclude note count (confounding variable) and velocity features (editorial bias) from our analysis, demonstrating that classification can achieve meaningful accuracy based on genuine musical features alone.
     
     \item \textbf{Reproducible Pipeline:} We release all code, extracted features, and experimental configurations to support reproducible research in computational composer classification.
 \end{enumerate}
@@ -143,13 +143,15 @@ Melodic shape carries significant stylistic information \cite{Pollastri2003}. We
 
 Feature extraction aligns to the metric grid rather than fixed time windows (quarter-note for 2/4, 3/4, 4/4; eighth-note for 6/8). Each bar is represented as a matrix of feature values, then aggregated into piece-level statistics (mean, standard deviation, entropy), yielding a 12-dimensional feature vector per piece.
 
-\subsection{Handmade Feature Extension (55D)}
+\subsection{Handmade Feature Extension (54D)}
 
-To complement the theory-driven 12D feature set, we extracted 55 additional statistical features across four musical dimensions: pitch features (f1--f10), rhythm/duration features (f16--f23), interval features (f24--f30, f52--f60), texture features (f47--f50), and higher-order statistics (f31--f34, f35--f46).
+To complement the theory-driven 12D feature set, we extracted 54 additional statistical features across four musical dimensions: pitch features (f2--f10), rhythm/duration features (f16--f23), interval features (f24--f30, f52--f60), texture features (f47--f50), and higher-order statistics (f31--f34, f35--f46).
 
-\subsubsection{Velocity Features (Excluded)}
+\subsubsection{Excluded Features}
 
-Velocity features (f11--f15) were initially considered but excluded from final analysis. MIDI velocity values in symbolic datasets often reflect editorial conventions of score transcribers rather than composer intent, as historical scores from the Romantic era specify dynamics qualitatively (e.g., \textit{p}, \textit{f}) rather than as numerical values (1--127). To ensure our model captures genuine stylistic patterns rather than data source artifacts, we excluded velocity features from our primary analysis.
+\textbf{Note Count (f1)}: Initially included but removed from final analysis. Note count serves as a proxy for piece length, which may confound stylistic analysis with formal/structural choices unrelated to composer-specific musical language. By excluding this feature, we test whether genuine musical features (interval patterns, texture, rhythm) can achieve competitive classification performance.
+
+\textbf{Velocity Features (f11--f15)}: MIDI velocity values in symbolic datasets often reflect editorial conventions of score transcribers rather than composer intent, as historical scores from the Romantic era specify dynamics qualitatively (e.g., \textit{p}, \textit{f}) rather than as numerical values (1--127). To ensure our model captures genuine stylistic patterns rather than data source artifacts, we excluded velocity features from our primary analysis.
 
 \subsection{MidiBERT Feature Extraction}
 
@@ -181,38 +183,18 @@ Table~\ref{tab:performance} shows results across feature configurations.
 \label{tab:performance}
 \begin{tabular}{lrrr}
 \toprule
-Feature Set & Dimensions & Bal. Acc. & Std Dev \\
+Feature Set & Dimensions & Classifier & Bal. Acc. \\
 \midrule
-Statistical (12D) & 12 & 49.3\% & 4.7\% \\
-Handmade (55D, no vel) & 55 & \textbf{65.0\%} & 5.6\% \\
-Handmade (21D, top) & 21 & \textbf{~70\%} & ~5\% \\
-MidiBERT (768D) + MLP & 768 & 45.3\% & -- \\
+Statistical (12D) & 12 & SVM & 49.3\% \\
+Handmade (54D) & 54 & SVM & 63.3\% \\
+Handmade (20D, top) & 20 & SVM & \textbf{~67\%} \\
+MidiBERT (768D) & 768 & SVM & 47.1\% \\
+MidiBERT (768D) & 768 & MLP & 45.3\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The 55D handcrafted feature set significantly outperforms MidiBERT with MLP, demonstrating that domain-specific features are more effective than general pretrained representations for this task.
-
-\subsection{Per-Composer Performance}
-
-Table~\ref{tab:percomposer} shows detailed metrics for the 55D feature set with SVM.
-
-\begin{table}[h]
-\centering
-\caption{Per-composer classification metrics (55D features, SVM).}
-\label{tab:percomposer}
-\begin{tabular}{lrrrr}
-\toprule
-Composer & Precision & Recall & F1 & Support \\
-\midrule
-Schubert & 0.62 & 0.62 & 0.62 & 84 \\
-Brahms & 0.69 & 0.64 & 0.66 & 109 \\
-Schumann & 0.62 & 0.69 & 0.65 & 71 \\
-\midrule
-\textbf{Macro Avg} & \textbf{0.64} & \textbf{0.65} & \textbf{0.64} & \textbf{264} \\
-\bottomrule
-\end{tabular}
-\end{table}
+The 54D handcrafted feature set significantly outperforms MidiBERT with both classifiers, demonstrating that domain-specific features are more effective than general pretrained representations for this task.
 
 \subsection{Feature Importance Analysis}
 
@@ -220,60 +202,60 @@ Table~\ref{tab:importance} shows the top 10 most important features.
 
 \begin{table}[h]
 \centering
-\caption{Top 10 most important features for composer classification (55D, velocity excluded).}
+\caption{Top 10 most important features for composer classification (54D).}
 \label{tab:importance}
 \begin{tabular}{rlcl}
 \toprule
 Rank & Feature & Importance & Category \\
 \midrule
-1 & f1\_note\_count & 0.0505 & Pitch \\
-2 & f27\_unison\_ratio & 0.0330 & Interval \\
-3 & f28\_stepwise\_ratio & 0.0323 & Interval \\
-4 & f22\_staccato\_ratio & 0.0315 & Rhythm \\
-5 & f3\_pitch\_std & 0.0306 & Pitch \\
-6 & f24\_interval\_mean & 0.0306 & Interval \\
-7 & f4\_pitch\_range & 0.0305 & Pitch \\
-8 & f34\_ioi\_skew & 0.0289 & Rhythm \\
-9 & f5\_unique\_pitches & 0.0281 & Pitch \\
-10 & f25\_interval\_std & 0.0270 & Interval \\
+1 & f27\_unison\_ratio & 0.0308 & Interval \\
+2 & pt\_std & 0.0287 & Texture \\
+3 & f3\_pitch\_std & 0.0286 & Pitch \\
+4 & f28\_stepwise\_ratio & 0.0280 & Interval \\
+5 & mc\_std & 0.0272 & Melody \\
+6 & f4\_pitch\_range & 0.0261 & Pitch \\
+7 & f22\_staccato\_ratio & 0.0259 & Rhythm \\
+8 & f24\_interval\_mean & 0.0243 & Interval \\
+9 & f8\_most\_common\_pc\_ratio & 0.0239 & Pitch \\
+10 & f25\_interval\_std & 0.0238 & Interval \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Feature Selection Curve}
 
-Figure~\ref{fig:feature_curve} shows the relationship between number of features and classification accuracy. Peak performance (~70\%) is achieved with approximately 21 top-ranked features.
+Figure~\ref{fig:feature_curve} shows the relationship between number of features and classification accuracy. Peak performance (~67\%) is achieved with approximately 20 top-ranked features.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\linewidth]{feature_accuracy_curve_55.png}
-\caption{SVM feature selection curve showing balanced accuracy as a function of number of top features. Peak performance (~70\%) achieved at ~21 features.}
+\includegraphics[width=0.9\linewidth]{feature_accuracy_curve_12+54.png}
+\caption{SVM feature selection curve showing balanced accuracy as a function of number of top features. Peak performance (~67\%) achieved at ~20 features.}
 \label{fig:feature_curve}
 \end{figure}
 
-\subsection{ANOVA Discriminability Analysis}
+\subsection{Combined Feature Analysis (780D)}
 
-One-way ANOVA confirmed significant between-composer variance for multiple features ($p < 0.05$). Most discriminative: f1\_note\_count, f27\_unison\_ratio, f28\_stepwise\_ratio, and texture features (pt\_std, pt\_mean).
+We also evaluated a combined feature set concatenating all features (12D statistical + 54D handmade + 768D MidiBERT). In the combined set, handcrafted features dominate the top rankings, with the first MidiBERT dimension (bert\_dim\_251) appearing only at rank 10. This confirms that for this specific task, domain-specific features encode more relevant information than general pretrained representations.
 
-\subsection{MLP Classification Results}
+\subsection{MLP vs. SVM on MidiBERT Embeddings}
 
-We evaluated an MLP classifier as an additional baseline. Results show:
+We compared SVM and MLP classifiers on the 768D MidiBERT embeddings:
 
 \begin{table}[h]
 \centering
-\caption{MLP vs SVM comparison.}
+\caption{SVM vs. MLP on MidiBERT embeddings.}
 \label{tab:mlp}
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-Model & Accuracy & Notes \\
+Classifier & Accuracy \\
 \midrule
-SVM (55D) & 65.0\% & RBF kernel, C=5.0 \\
-MLP (768D MidiBERT) & 45.3\% & 2 hidden layers \\
+SVM (RBF) & 47.1\% \\
+MLP & 45.3\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The MLP on MidiBERT embeddings underperformed compared to handcrafted features with SVM, suggesting that the pretrained representations do not capture Lieder-specific stylistic patterns effectively.
+SVM outperforms MLP on MidiBERT embeddings, suggesting that the small dataset (264 pieces) is insufficient for MLP to learn effective non-linear boundaries.
 
 \section{Musicological Discussion}\label{sec:discussion}
 
@@ -283,19 +265,19 @@ Schubert's higher stepwise ratio (f28) aligns with observations about his lyrica
 
 \subsection{What Features Reveal About Schumann}
 
-Schumann's staccato ratio (f22) and rhythm variance reflect his diverse articulation patterns and poetic declamation approach. Lower simultaneity suggests arpeggiated textures (as in \textit{Dichterliebe} opening). Complex rhythmic patterns mirror his expressive intensity.
+Schumann's high texture variation (pt\_std) and staccato ratio (f22) reflect his diverse accompaniment patterns and poetic declamation approach. Lower simultaneity suggests arpeggiated textures (as in \textit{Dichterliebe} opening). Complex rhythmic patterns mirror his expressive intensity.
 
 \subsection{What Features Reveal About Brahms}
 
-Brahms' high note count (f1) and pitch range (f4) reflect his symphonic piano writing and rich textures. Conservative interval patterns (f27\_unison\_ratio) support his characterization as classically restrained with folk song influence. Dense chordal writing captures his four-part, string-quartet-like piano voicing.
+Brahms' high pitch range (f4) and pitch standard deviation (f3) reflect his symphonic piano writing and rich textures. Conservative interval patterns (f27\_unison\_ratio) support his characterization as classically restrained with folk song influence. Dense chordal writing captures his four-part, string-quartet-like piano voicing.
 
 \subsection{Why Handcrafted Features Outperform MidiBERT}
 
 Domain specificity explains the performance gap: MidiBERT trained on diverse MIDI data may not capture Lieder-specific features. The 264-piece corpus is insufficient for effective fine-tuning of 768-dimensional embeddings. Handcrafted features encode musicological hypotheses about what distinguishes composers.
 
-\subsection{Velocity Feature Exclusion Rationale}
+\subsection{Methodological Rigor: Feature Exclusion}
 
-We explicitly excluded velocity features from our analysis due to concerns about editorial bias in MIDI transcriptions. This decision strengthens our methodology by ensuring that classification is based on composer-intentioned patterns rather than transcriber conventions. The fact that our model achieves 65.0\% accuracy without velocity features demonstrates that genuine stylistic markers exist in other musical dimensions (pitch, rhythm, interval, texture).
+We explicitly excluded note count and velocity features from our analysis due to concerns about confounding variables and editorial bias. This decision strengthens our methodology by ensuring that classification is based on composer-intentioned patterns rather than artifacts. The fact that our model achieves ~67\% accuracy without these features demonstrates that genuine stylistic markers exist in other musical dimensions (pitch, rhythm, interval, texture).
 
 \section{Exploratory Analysis}\label{sec:exploratory}
 
@@ -307,13 +289,13 @@ The 24 songs of Schubert's \textit{Winterreise} show lower variance in texture f
 
 Schumann's \textit{Dichterliebe} opening shows very low simultaneity and high texture variance, quantitatively confirming the famous arpeggiated introduction. Later songs show increased texture density, reflecting the cycle's emotional progression.
 
-\subsection{Feature Dominance Patterns}
+\subsection{Interval Features as Primary Discriminators}
 
-Contrary to our initial hypotheses emphasizing harmonic features, note count (f1) and interval ratios (f27, f28) emerged as the most discriminative attributes. This suggests that for same-era composer classification, surface-level statistical regularities (piece length, melodic motion patterns) may carry more stylistic information than deeper tonal properties. This finding echoes Youngblood's (1958) original insight about statistical distributions capturing stylistic choice.
+Contrary to our initial hypotheses emphasizing harmonic features, unison ratio (f27) and stepwise ratio (f28) emerged as the most discriminative attributes after note count removal. This suggests that melodic motion patterns carry more stylistic information than deeper tonal properties for same-era composer classification. This finding echoes Youngblood's (1958) original insight about statistical distributions capturing stylistic choice.
 
 \section{Conclusion and Future Work}\label{sec:conclusion}
 
-This exploratory study investigated whether computational features can capture individual composer style in German Lieder. Key findings: (1) Handcrafted features (55D, 65.0\%) outperform pretrained embeddings (45.3\%); (2) Note count and interval features are most discriminative; (3) Compact subsets (~21 features) achieve peak performance (~70\%); (4) Velocity features were excluded to avoid editorial bias.
+This exploratory study investigated whether computational features can capture individual composer style in German Lieder. Key findings: (1) Handcrafted features (54D, ~67\%) outperform pretrained embeddings (47.1\% SVM, 45.3\% MLP); (2) Unison ratio, texture variation, and pitch standard deviation are most discriminative; (3) Compact subsets (~20 features) achieve peak performance; (4) Methodological exclusions (note count, velocity) strengthen validity of findings.
 
 Limitations include dataset size (264 pieces), composer coverage (three canonical composers), and feature scope (no chord function analysis). Future work includes chord tonal distance implementation, expanded corpus (Wolf, Strauss, Mahler), multi-modal fusion, and deeper musicologist collaboration.
 

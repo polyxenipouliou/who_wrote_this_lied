@@ -1,0 +1,25 @@
+=====================================================
+    MidiBERT (768D) SVM Model Performance Report     
+=====================================================
+
+Model: Support Vector Machine (RBF Kernel, C=5.0)
+Input: Adversarial-MidiBERT Embeddings (768 dimensions)
+Classes: bach, monteverdi, palestrina
+
+--- 5-Fold Cross-Validation (Balanced Accuracy) ---
+Individual Fold Scores: [0.98333333 1.         1.         0.96491228 1.        ]
+Mean Score: 0.9896
+Standard Deviation: 0.0140
+
+--- Detailed Classification Report ---
+              precision    recall  f1-score   support
+
+        bach       1.00      0.99      0.99       100
+  monteverdi       0.99      0.98      0.98        97
+  palestrina       0.98      1.00      0.99       100
+
+    accuracy                           0.99       297
+   macro avg       0.99      0.99      0.99       297
+weighted avg       0.99      0.99      0.99       297
+
+Overall Balanced Accuracy (Aggregated): 0.9898

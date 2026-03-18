@@ -123,7 +123,29 @@ Our approach differs from these general-purpose tools in its theoretical groundi
 
 ---
 
-## 2.4 Gap Identification
+## 2.4 Methodological Considerations
+
+### 2.4.1 Confounding Variables in Feature Selection
+
+A critical but often overlooked aspect of computational musicology is the potential for confounding variables to influence classification results. Features that correlate with composer identity may not necessarily reflect genuine stylistic choices.
+
+**Piece Length**: Note count or duration may serve as proxies for formal/structural choices rather than composer-specific musical language. A composer who favors shorter forms may be distinguishable based solely on piece length, but this does not illuminate their musical style.
+
+**Editorial Conventions**: Features derived from editorial markings (e.g., MIDI velocity values) may reflect transcriber conventions rather than composer intent, particularly for historical scores where dynamics were specified qualitatively rather than numerically.
+
+This study explicitly addresses these concerns by:
+1. Excluding note count to test whether genuine musical features achieve competitive performance
+2. Excluding velocity features to avoid editorial bias
+
+### 2.4.2 Interpretability vs. Performance Trade-off
+
+Deep learning approaches sacrifice interpretability for potential performance gains. While pretrained models may achieve high accuracy on large datasets, they provide limited insight into what musical characteristics drive classification decisions.
+
+Handcrafted features, while potentially lower-performing on large datasets, offer direct musicological interpretation, enabling dialogue between computational findings and theoretical understanding.
+
+---
+
+## 2.5 Gap Identification
 
 Our literature review reveals several gaps in existing research:
 
@@ -135,18 +157,24 @@ Our literature review reveals several gaps in existing research:
 
 4. **Lieder underrepresentation**: Despite the genre's importance in classical music, computational analysis of Lieder remains limited compared to instrumental music.
 
-5. **Velocity feature concerns**: Prior work has not adequately addressed the potential for editorial bias in MIDI velocity data, which may reflect transcriber conventions rather than composer intent.
+5. **Methodological rigor**: Prior work has not adequately addressed potential confounding variables (piece length, editorial bias) that may inflate classification performance.
 
 This project addresses these gaps by:
 - Focusing specifically on same-era Lieder classification
 - Providing detailed musicological interpretation of computational findings
 - Using interpretable, theory-grounded features
-- Explicitly excluding velocity features to avoid editorial bias
+- Explicitly excluding confounding variables (note count, velocity)
 - Releasing a curated Lieder dataset with extracted features
 
 ---
 
 ## Background Section Writing Notes
+
+### Key Updates from Previous Version:
+- Added Section 2.4 on Methodological Considerations
+- Added discussion of confounding variables (piece length, editorial bias)
+- Added interpretability vs. performance trade-off discussion
+- Updated gap identification to include methodological rigor
 
 ### Key Citations:
 - Youngblood (1958) - Foundational statistical approach
@@ -170,20 +198,18 @@ This project addresses these gaps by:
 - Critical evaluation of both handcrafted and deep learning approaches
 - Clear identification of research gaps
 
-### Velocity Exclusion:
-- Added new gap about velocity feature concerns
-- Justifies methodological decision in literature context
-
 ### Length Management:
-- Current draft: ~2 pages
-- May need to condense Table 1 or reduce composer descriptions
-- Consider moving some technical details to methodology section
+- Current draft: ~2.5 pages
+- May need to condense for final submission
+- Consider moving methodological considerations to methodology section
 
 ---
 
 ## Revision Checklist
 
-- [x] Add velocity feature concerns to gap identification
+- [x] Add methodological considerations section
+- [x] Add confounding variables discussion
+- [x] Update gap identification
 - [ ] Verify all citations are accurate and in IEEE format
 - [ ] Ensure composer descriptions align with musicological literature
 - [ ] Check that gap identification leads naturally to our methodology
@@ -195,7 +221,7 @@ This project addresses these gaps by:
 
 ## Next Steps
 
-1. Complete methodology section (03_methodology.md) with detailed feature descriptions
+1. Complete methodology section with detailed feature descriptions
 2. Ensure results section references background literature appropriately
 3. Cross-reference musicological claims with discussion section
-4. Verify all citations appear in references section (08_references.md)
+4. Verify all citations appear in references section

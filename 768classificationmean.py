@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore')
 # 1. Load MidiBERT 768-dimensional Feature Data
 # ==========================================
 # Define the path to the CSV file containing extracted features
-csv_path = r"E:\Master\symbolic_2026\Adversarial-MidiBERT\midibert_768d_features.csv"
+csv_path = r"E:\Master\symbolic_2026\Adversarial-MidiBERT\composer_corpus_bert_features.csv"
 print(f"[*] Loading large model feature data from: {csv_path}")
 
 try:
@@ -74,7 +74,7 @@ bal_acc_final = balanced_accuracy_score(y, y_pred)
 # ==========================================
 # 4. Export Detailed Results to TXT File
 # ==========================================
-results_filename = 'results_768.txt'
+results_filename = 'results_768-3.txt'
 with open(results_filename, 'w', encoding='utf-8') as f:
     f.write("=====================================================\n")
     f.write("    MidiBERT (768D) SVM Model Performance Report     \n")
@@ -113,6 +113,6 @@ plt.xticks(rotation=15)
 plt.tight_layout()
 
 # Save the figure with high resolution (300 DPI)
-plt.savefig('confusion_matrix_midibert_svm.png', dpi=300)
-print("[+] Confusion matrix image saved as 'confusion_matrix_midibert_svm.png'")
+plt.savefig('confusion_matrix_midibert_svm_3.png', dpi=300)
+print("[+] Confusion matrix image saved as 'confusion_matrix_midibert_svm_3.png'")
 plt.show()
