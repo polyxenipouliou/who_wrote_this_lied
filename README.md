@@ -4,7 +4,7 @@
 
 This project investigates whether individual composer style can be captured through computational analysis of symbolic music representations. We propose a four-layer feature framework combining **tonal tension** (Spiral Array Model), **harmonic complexity** (pitch class entropy), **pianistic texture** (onset density) and **melodic contour** (voice interval variation) to classify Lieder by Franz Schubert, Robert Schumann, and Johannes Brahms. Our experiments demonstrate that statistical descriptors from musicologically driven features achieve approximately 49.3% balanced accuracy using a Support Vector Machine classifier. This significantly outperforms both SVM (47.1%) and MLP (45.3%) classifiers on 768-dimensional pretrained transformer embeddings from Adversarial-MidiBERT on our 264-piece corpus.
 
-**Full Paper:** See [`paper.pdf`](paper.pdf) for the complete research paper, or [`paper/main.tex`](paper/main.tex) for the LaTeX source.
+
 
 ---
 
