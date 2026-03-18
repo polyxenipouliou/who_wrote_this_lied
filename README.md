@@ -270,11 +270,9 @@ flowchart TD
     C --> D[Feature Extraction]
     
     D --> E[12D Statistical Features<br/>Tonal, Harmonic, Texture, Contour]
-    D --> F[54-60D Handcrafted Features<br/>Extended musicological descriptors]
     D --> G[768D MidiBERT Embeddings<br/>Pretrained transformer]
     
     E --> H[SVM Classification<br/>RBF kernel, balanced weights]
-    F --> H
     G --> I[SVM Classification<br/>RBF kernel, C=5.0]
     G --> J[MLP Classification<br/>128,64 hidden layers]
     
@@ -291,43 +289,8 @@ flowchart TD
     Q --> T[Brahms: death words at low pitch<br/>Text painting strategies]
 ```
 
----
 
-## Musicological Interpretation
 
-### What Features Reveal About Composer Style
-
-**Franz Schubert:**
-- Higher stepwise ratio (`f28`) reflects lyrical, vocal melody writing
-- Lower texture density aligns with guitar-like accompaniment patterns
-- Moderate harmonic complexity supports text expression
-- Equal distribution across LDA topics with slight concentration on spiritual themes (31%)
-
-**Robert Schumann:**
-- Higher texture variation (`pt_std`) indicates diverse accompaniment patterns
-- Higher staccato ratio (`f22`) suggests varied articulation
-- Complex rhythmic patterns reflect poetic declamation
-- Strong affinity with emotional love topic (34%)
-- Transitional position between Schubert and Brahms traditions
-
-**Johannes Brahms:**
-- Higher pitch range (`f4`) indicates richer textures
-- Conservative interval patterns (`f27_unison_ratio`) reflect classical influence
-- Dense chordal writing shows symphonic piano writing
-- Most distinctive text-painting: death-related vocabulary at low pitches
-- Clear concentration in Sleep & Spirituality topic (36%)
-
----
-
-## Methodological Notes
-
-### Note Count Exclusion
-Note count (`f1`) was initially included as a feature but was removed because it serves as a proxy for piece length, which may confound stylistic analysis with formal/structural choices unrelated to composer-specific musical language.
-
-### Velocity Feature Exclusion
-Velocity features (`f11-f15`) were excluded because MIDI velocity values in symbolic datasets often reflect editorial conventions of score transcribers rather than composer intent. Historical scores from the Romantic era specify dynamics qualitatively (e.g., *p*, *f*) rather than as numerical values (1-127).
-
----
 
 ## Limitations
 
@@ -380,5 +343,4 @@ This project is for educational and research purposes. Data sources (OpenScore, 
 
 - [OpenScore](https://openscore.nl/) for the Lieder corpus
 - [Adversarial-MidiBERT](https://github.com/RS2002/Adversarial-MidiBERT) team for the pretrained model
-- Herremans & Chew for the Spiral Array Model implementation guidance
-- music21 community for the music analysis toolkit
+
